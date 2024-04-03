@@ -3,8 +3,8 @@ const axios = require('axios').default;
 
 const config = {
     client: {
-      id: '9e7da33027952e3a6311',
-      secret: 'c323d1bc88ad20a9d48322cec31493185deeb6e8'
+      id: `${process.env.OAUTH_GITHUB_CLIENT}`,
+      secret: `${process.env.OAUTH_GITHUB_SECRET}`
     },
     auth: {
         tokenHost: 'https://github.com',
@@ -20,7 +20,7 @@ const config = {
 const client = new AuthorizationCode(config);
 
 const authorizationUri = client.authorizeURL({
-    redirect_uri: 'http://localhost:8000/authentification/callback',
+    redirect_uri: `http://${process.env.HOST}:${process.env.PORT}/authentification/callback`,
     scope: 'notifications user:email',
     state: '3(#0/!~',
   });
@@ -67,7 +67,7 @@ const authorizationUri = client.authorizeURL({
       console.log("PRIMARY", user_primary_mail)
 
       // Set email as coockie and redirect
-      return res.cookie("mail", user_primary_mail).redirect("http://localhost:3000/authentification");
+      return res.cookie("mail", user_primary_mail).redirect(`http://${process.env.FRONT_HOST}:${process.env.FRONT_PORT}/authentification`);
     } catch (error) {
       console.error('Access Token Error', error.message);
       return res.status(500).json('Authentication failed');
